@@ -57,6 +57,7 @@ struct ContentView: View {
     @State private var totalNumber: String = "0"
     @State var tempNumber: Int = 0
     @State var operatorType: ButtonType = .clear
+    @State var isNotEditing: Bool = true
     
     private let buttonData: [[ButtonType]] = [
         [.clear, .opposite, .percent, .devide],
@@ -80,7 +81,7 @@ struct ContentView: View {
                 HStack {
                     ForEach(line, id: \.self) {item in
                         Button(action: {
-                            if totalNumber == "0" {
+                            if isNotEditing {
                                 if item == .clear ||
                                     item == .percent ||
                                     item == .devide ||
@@ -90,32 +91,37 @@ struct ContentView: View {
                                     item == .equal ||
                                     item == .opposite {
                                     totalNumber = "0"
+                                    isNotEditing = true
                                 } else if item == .dot {
                                     totalNumber = "0."
+                                    isNotEditing = false
                                 } else {
                                     totalNumber = item.buttonDisplayName
+                                    isNotEditing = false
                                 }
                             } else {
                                 if item == .clear {
                                     totalNumber = "0"
+                                    isNotEditing = true
                                 } else if item == .dot {
                                     totalNumber = totalNumber
+                                    isNotEditing = true
                                 } else if item == .plus {
                                     tempNumber = Int(totalNumber) ?? 0
                                     operatorType = .plus
-                                    totalNumber = "0"
+                                    isNotEditing = true
                                 } else if item == .multiply {
                                     tempNumber = Int(totalNumber) ?? 0
                                     operatorType = .multiply
-                                    totalNumber = "0"
+                                    isNotEditing = true
                                 } else if item == .minus {
                                     tempNumber = Int(totalNumber) ?? 0
                                     operatorType = .minus
-                                    totalNumber = "0"
+                                    isNotEditing = true
                                 } else if item == .devide {
                                     tempNumber = Int(totalNumber) ?? 0
                                     operatorType = .devide
-                                    totalNumber = "0"
+                                    isNotEditing = true
                                 } else if item == .equal {
                                     if operatorType == .plus {
                                         totalNumber = String((Int(totalNumber) ?? 0) + tempNumber)
