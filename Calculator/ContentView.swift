@@ -134,16 +134,29 @@ struct ContentView: View {
                             
                         }, label: {
                             Text(item.buttonDisplayName)
-                                .frame(width: item == .some(.zero) ? 160 : 80, height: 80)
+                                .frame(width: calculateButtonWidth(button: item), height: calculateButtonHeight(button: item))
                                 .background(item.backgroundColor)
                                 .cornerRadius(40)
                                 .foregroundColor(item.foreColor)
-                                .font(.system(size: 30))
+                                .font(.system(size: 30, weight: .bold))
                         })
                     }
                 }
             }
         }
+    }
+    
+    private func calculateButtonWidth(button buttonType: ButtonType) -> CGFloat {
+        switch buttonType {
+        case .zero:
+            return (UIScreen.main.bounds.width - 5*10) / 4 * 2
+        default:
+            return ((UIScreen.main.bounds.width - 5*10) / 4)
+        }
+    }
+    
+    private func calculateButtonHeight(button: ButtonType) -> CGFloat {
+        return (UIScreen.main.bounds.width - 5*10) / 4
     }
 }
 
