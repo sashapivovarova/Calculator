@@ -28,8 +28,8 @@ enum ButtonType {
         case .equal : return "="
         case .plus : return "+"
         case .minus : return "-"
-        case .multiply: return "*"
-        case .devide : return "/"
+        case .multiply: return "X"
+        case .devide : return "÷"
         case .percent : return "%"
         case .opposite : return "+/-"
         case .clear : return "C"
@@ -61,7 +61,7 @@ struct ContentView: View {
         [.seven, .eight, .nine, .multiply],
         [.four, .five, .six, .minus],
         [.one, .two, .three, .plus],
-        [.zero, .zero, .dot, .equal]
+        [.zero, .dot, .equal]
     ]
     
     var body: some View {
@@ -79,13 +79,22 @@ struct ContentView: View {
                     ForEach(line, id: \.self) {item in
                         Button(action: {
                             if totalNumber == "0" {
-                                totalNumber = item.buttonDisplayName
+                                if item == .clear || item == .percent || item == .devide || item == .multiply || item == .minus || item == .plus || item == .equal {
+                                    totalNumber = "0"
+                                } else {
+                                    totalNumber = item.buttonDisplayName
+                                }
                             } else {
-                                totalNumber += item.buttonDisplayName
+                                if item == .clear {
+                                    totalNumber = "0"
+                                } else {
+                                    totalNumber += item.buttonDisplayName
+                                }
                             }
+                            
                         }, label: {
                             Text(item.buttonDisplayName)
-                                .frame(width: 80, height: 80)
+                                .frame(width: item == .some(.zero) ? 160 : 80, height: 80)
                                 .background(item.backgroundColor)
                                 .cornerRadius(40)
                                 .foregroundColor(item.foreColor)
