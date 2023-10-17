@@ -55,6 +55,8 @@ enum ButtonType {
 struct ContentView: View {
     
     @State private var totalNumber: String = "0"
+    @State var tempNumber: Int = 0
+    @State var operatorType: ButtonType = .clear
     
     private let buttonData: [[ButtonType]] = [
         [.clear, .opposite, .percent, .devide],
@@ -79,14 +81,52 @@ struct ContentView: View {
                     ForEach(line, id: \.self) {item in
                         Button(action: {
                             if totalNumber == "0" {
-                                if item == .clear || item == .percent || item == .devide || item == .multiply || item == .minus || item == .plus || item == .equal {
+                                if item == .clear ||
+                                    item == .percent ||
+                                    item == .devide ||
+                                    item == .multiply ||
+                                    item == .minus ||
+                                    item == .plus ||
+                                    item == .equal ||
+                                    item == .opposite {
                                     totalNumber = "0"
+                                } else if item == .dot {
+                                    totalNumber = "0."
                                 } else {
                                     totalNumber = item.buttonDisplayName
                                 }
                             } else {
                                 if item == .clear {
                                     totalNumber = "0"
+                                } else if item == .dot {
+                                    totalNumber = totalNumber
+                                } else if item == .plus {
+                                    tempNumber = Int(totalNumber) ?? 0
+                                    operatorType = .plus
+                                    totalNumber = "0"
+                                } else if item == .multiply {
+                                    tempNumber = Int(totalNumber) ?? 0
+                                    operatorType = .multiply
+                                    totalNumber = "0"
+                                } else if item == .minus {
+                                    tempNumber = Int(totalNumber) ?? 0
+                                    operatorType = .minus
+                                    totalNumber = "0"
+                                } else if item == .devide {
+                                    tempNumber = Int(totalNumber) ?? 0
+                                    operatorType = .devide
+                                    totalNumber = "0"
+                                } else if item == .equal {
+                                    if operatorType == .plus {
+                                        totalNumber = String((Int(totalNumber) ?? 0) + tempNumber)
+                                    } else if operatorType == .multiply {
+                                        totalNumber = String((Int(totalNumber) ?? 0) * tempNumber)
+                                    } else if operatorType == .minus {
+                                        totalNumber = String(tempNumber - (Int(totalNumber) ?? 0))
+                                    } else if operatorType == .devide {
+                                        totalNumber = String((Int(totalNumber) ?? 0) / tempNumber)
+                                    }
+                                    tempNumber = 0
                                 } else {
                                     totalNumber += item.buttonDisplayName
                                 }
